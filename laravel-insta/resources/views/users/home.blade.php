@@ -9,7 +9,7 @@
             <div class="text-center">
                 <h2>Share Photos</h2>
                 <p class="text-muted">When you sher photos, they'll appear on your profile</p>
-                <a href="" class="text-decoration-none">
+                <a href="{{ route('post.create') }}" class="text-decoration-none">
                     Share your first photo
                 </a>
             </div>

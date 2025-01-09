@@ -68,7 +68,7 @@
 
                             {{-- Create Post --}}
                             <li class="nav-item" title="Create Post">
-                                <a href="" class="nav-link">
+                                <a href="{{ route('post.create') }}" class="nav-link">
                                     <i class="fa-solid fa-circle-plus text-dark icon-sm"></i>
                                 </a>
                             </li>

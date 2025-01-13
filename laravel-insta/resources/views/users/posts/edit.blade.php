@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Create Post')
+@section('title', 'Edit Post')
 
 @section('content')
-    <form action="{{ route('post.store')}}" method="post" enctype="multipart/form-data">
-        @csrf
-        @method('PATCH')
 
+    <form action="" method="post" enctype="multipart/form-data">
+        @csrf
+        
         {{-- categorirs --}}
         <div class="mb-3">
             <label for="category" class="form-label d-block fw-bold">
@@ -30,7 +30,7 @@
         {{-- description --}}
         <div class="mb-3">
             <label for="description" class="form-label fw-bold">Description</label>
-            <textarea name="description" id="description" rows="3" class="form-control" placeholder="What's on your mind?">{{ old('description') }}</textarea>
+            <textarea name="description" id="description" rows="3" class="form-control" placeholder="What's on your mind?">{{ old('description' , $post->description) }}</textarea>
             @error('description')
                 <div class="text-danger small">{{ $message }}</div>
             @enderror
@@ -38,18 +38,22 @@
 
         {{-- image --}}
         <div class="mb-4">
+            <div class="col-6">  
                 <label for="image" class="form-label fw-bold">Image</label>
-                <input type="file" name="image" id="image" class="form-control" aria-describedby="image-info">
+                <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="img-thumbnail w-100">
+                <input type="file" name="image" id="image" class="form-control mt-1" aria-describedby="image-info">
                 <div class="form-text" id="image-info">
                     The acceptable formats are jpeg, png, jpg, gif only.<br>
                     Max file is 1048kb.
                 </div>
+                {{-- Error message area --}}
                 @error('image')
                     <div class="text-danger small">{{ $message }}</div>
                 @enderror
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary px-5">Post</button>
-
+        <button type="submit" class="btn btn-warning px-5">Save</button>
     </form>
+
 @endsection

@@ -8,7 +8,7 @@ class CategoryPost extends Model
 {
     //
     protected $table = 'category_post';
-    // protected $fillable = ['category_id' , 'post_id'];
+    protected $fillable = ['category_id' , 'post_id'];
     public $timestamps = false;
 
 

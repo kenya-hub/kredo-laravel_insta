@@ -1,7 +1,7 @@
 {{-- Clicable Image --}}
 <div class="container p-0">
     <a href="{{ route('post.show', $post->id) }}">
-        <img src="{{ $post->image }}" alt="Post ID {{ $post->id }}" class="w-100">
+        <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100">
     </a>
 </div>
 
@@ -35,5 +35,8 @@
     &nbsp; {{--  nbsp = non-breaking space --}}
     <p class="d-inline fw-light">{{ $post->description }}</p>
     <p class="text-uppercase text-muted xsmall">{{ date('M d, Y' , strtotime($post->created_at)) }}</p>
+
+    {{-- iclude comment form here --}}
+    @include('users.posts.contents.comments')
 
 </div>

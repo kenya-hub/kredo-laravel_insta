@@ -62,21 +62,107 @@ class PostController extends Controller
                 ->with('post', $post);
     }
 
+    // public function edit($id)
+    // {
+
+    //     $post = $this->post->findOrFail($id);
+
+    //     # IF the Auth uwer is not the woner of the post , rediredt to homepage
+    //     if(Auth::user()->id != $post->user_id)
+    //     {
+    //         return redirect()->route('index');
+    //     }
+
+    //     $all_categories = $this->category->all(); //retrieve all categories
+
+    //     return view('users.posts.edit')
+    //             ->with('all_categories', $all_categories)
+    //             ->with('post', $post);
+    // }
+
+    // edit() - view the Edit Post Page and display details of a post
     public function edit($id)
     {
+        $post = $this->post->findOrFail($id);
+        # If the Auth user is NOT the owner of the post, redirect to homepage
+        if (Auth::user()->id != $post->user->id){
+            return redirect()->route('index');
+        }
+        $all_categories = $this->category->all(); // retrieves all categories
+        # Get all the category IDs of this post. Save in an array
+        $selected_categories = [];
+        foreach ($post->categoryPost as $category_post){
+            $selected_categories[] = $category_post->category_id;
+            /*
+                $selected_categories = [
+                    [1],
+                    [2],
+                    [3]
+                ];
+            */
+        }
+        return view('users.posts.edit')
+            ->with('all_categories', $all_categories)
+            ->with('post', $post)
+            ->with('selected_categories', $selected_categories);
+    }
 
+    // update() - update the post
+    public function update(Request $request, $id)
+    {
+        # 1. Validate the data from the form
+        $request->validate([
+            'category'      => 'required|array|between:1,3',
+            'description'   => 'required|max:1000',
+            'image'         => 'mimes:jpg,png,jpeg,gif|max:1048'
+                            # Multipurpose Internet Mail Extensions
+        ]);
+        # 2. Update the post
+        $post               = $this->post->findOrFail($id);
+        $post->description  = $request->description;
+        // If there is a new image...
+        if ($request->image){
+            $post->image = 'data:image/' . $request->image->extension() . ';base64,' . base64_encode(file_get_contents($request->image));
+        }
+        $post->save();
+        # 3. Delete all records from categoryPost related to this post
+        $post->categoryPost()->delete();
+        # 4. Save the new categories to category_post pivot table
+        foreach ($request->category as $category_id){
+            $category_post[] = [
+                'category_id' => $category_id
+            ];
+            /*
+                $category_post = [
+                    ['category_id' => 1],
+                    ['category_id' => 2],
+                    ['category_id' => 3],
+                ];
+            */
+        }
+        $post->categoryPost()->createMany($category_post);
+        /*
+            $category_post = [
+                ['post_id' => 2, 'category_id' => 1],
+                ['post_id' => 2, 'category_id' => 2],
+                ['post_id' => 2, 'category_id' => 3]
+            ];
+        */
+        # redirect to show post page
+        return redirect()->route('post.show', $id);
+    }
+
+    //destroy() - delete the post
+    public function delete($id)
+    {
         $post = $this->post->findOrFail($id);
 
-        # IF the Auth uwer is not the woner of the post , rediredt to homepage
         if(Auth::user()->id != $post->user_id)
         {
             return redirect()->route('index');
         }
 
-        $all_categories = $this->category->all(); //retrieve all categories
-
-        return view('users.posts.edit')
-                ->with('all_categories', $all_categories)
-                ->with('post', $post);
+        $post->delete();
+        return redirect()->route('index');
     }
 }

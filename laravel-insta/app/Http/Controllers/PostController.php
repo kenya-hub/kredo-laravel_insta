@@ -62,32 +62,16 @@ class PostController extends Controller
                 ->with('post', $post);
     }
 
-    // public function edit($id)
-    // {
-
-    //     $post = $this->post->findOrFail($id);
-
-    //     # IF the Auth uwer is not the woner of the post , rediredt to homepage
-    //     if(Auth::user()->id != $post->user_id)
-    //     {
-    //         return redirect()->route('index');
-    //     }
-
-    //     $all_categories = $this->category->all(); //retrieve all categories
-
-    //     return view('users.posts.edit')
-    //             ->with('all_categories', $all_categories)
-    //             ->with('post', $post);
-    // }
-
     // edit() - view the Edit Post Page and display details of a post
     public function edit($id)
     {
         $post = $this->post->findOrFail($id);
         # If the Auth user is NOT the owner of the post, redirect to homepage
-        if (Auth::user()->id != $post->user->id){
+        if (Auth::user()->id != $post->user->id)
+        {
             return redirect()->route('index');
         }
+        
         $all_categories = $this->category->all(); // retrieves all categories
         # Get all the category IDs of this post. Save in an array
         $selected_categories = [];

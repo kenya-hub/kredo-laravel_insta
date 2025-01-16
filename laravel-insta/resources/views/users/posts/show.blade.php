@@ -3,6 +3,16 @@
 @section('title', 'Show Post')
 
 @section('content')
+<style>
+    .col-4 {
+        overflow-y: scroll;
+    }
+
+    .card-body {
+        position: absolute;
+        top: 65px;
+    }
+</style>
 
 <div class="row border shadow">
     {{-- post image --}}
@@ -18,7 +28,7 @@
                 <div class="row align-items-center">
                     {{-- avatar --}}
                     <div class="col-auto">
-                        <a href="">
+                        <a href="{{ route('profile.show', $post->user->id) }}">
                             @if ($post->user->avatar)
                                 <img src="{{ $post->user->avatar }}" alt="{{ $post->user->name }}" class="rounded-circle avatar-sm">
                             @else
@@ -29,7 +39,7 @@
 
                     {{-- name --}}
                     <div class="col ps-0">
-                        <a href="" class="text-decoration-none text-dark">
+                        <a href="{{ route('profile.show', $post->user->id) }}" class="text-decoration-none text-dark">
                             {{ $post->user->name}}
                         </a>
                     </div>
@@ -63,7 +73,7 @@
                                 @csrf
                                 <button type="submit" class="border-0 bt-transparent p-0 text-primary">Follow</button>
                             </form>
-                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
@@ -118,11 +128,33 @@
                             <div class="text-danger small">{{ $message }}</div>            
                         @enderror
                     </form>
+
                     {{-- show all comments of the post here --}}
+                    @if ($post->comments->isNotEmpty())
+                        <ul class="list-group mt-2">
+                            @foreach ($post->comments as $comment)
+                                <li class="list-group-item border-0 p-0 mb-2 bg-white">
+                                    <a href="{{ route('profile.show', $comment->user->id) }}" class="text-decoration-none text-dark fw-bold">{{ $comment->user->name}}</a>
+                                    &nbsp;
+                                    <p class="d-inline fw-light">{{ $comment->body }}</p>
 
+                                    <form action="{{ route('comment.delete' , $comment->id )}}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <span class="text-uppercase text-muted xsmall">{{ date('M d, Y' , strtotime($comment->created_at)) }}</span>
+
+                                        @if (Auth::user()->id === $comment->user->id)
+                                            &middot;    
+                                            <button type="submit" class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
+                                        @endif
+                                    </form>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>

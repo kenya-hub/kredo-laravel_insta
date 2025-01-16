@@ -1,18 +1,21 @@
 <div class="card-header bg-white py-3">
     <div class="row align-items-center">
+        {{-- avatar --}}
         <div class="col-auto">
-            <a href="#">
+            <a href="{{ route('profile.show', $post->user->id) }}">
                 @if($post->user->avatar)
-                    <img src="" alt="{{ $post->user->name }}" class="rounded-circle avatar-sm">    
-                
+                    <img src="{{ $post->user->avatar }}" alt="{{ $post->user->name }}" class="rounded-circle avatar-sm">    
                 @else
                     <i class="fa-solid fa-circle-user text-secondary icon-sm"></i>
                 @endif
             </a>
         </div>
 
+        {{-- name --}}
         <div class="col ps-0">
-            <a href="" class="text-decoration-none text-dark">{{ $post->user->name }}</a>
+            <a href="{{ route('profile.show', $post->user->id) }}" class="text-decoration-none text-dark">
+                {{ $post->user->name }}
+            </a>
         </div>
 
         <div class="col-auto">

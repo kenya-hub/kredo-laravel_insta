@@ -34,4 +34,12 @@ class CommentController extends Controller
 
         return redirect()->back();
     }
+
+    public function delete($id)
+    {
+        $comment = $this->comment->findOrFail($id);
+        $comment->delete();
+
+        return redirect()->back();
+    }
 }

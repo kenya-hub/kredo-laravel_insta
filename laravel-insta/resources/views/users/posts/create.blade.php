@@ -5,8 +5,7 @@
 @section('content')
     <form action="{{ route('post.store')}}" method="post" enctype="multipart/form-data">
         @csrf
-        @method('PATCH')
-
+        
         {{-- categorirs --}}
         <div class="mb-3">
             <label for="category" class="form-label d-block fw-bold">
